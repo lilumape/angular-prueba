@@ -8,9 +8,17 @@ import 'rxjs/add/operator/map'
 export class AuthenticationService {
     constructor(private http: Http) {}
 
+	createAuthorizationHeader(headers: Headers) {
+    headers.append('Authorization', 'Basic ' +
+      'admin:admin'); 
+  }
 
     login(username: string, password: string) {
-        return this.http.get('/escrutinios/login/usuario', JSON.stringify({ usuDocumento: username, usuPassword: password }))
+		
+		let headers = new Headers();
+        this.createAuthorizationHeader(headers);
+		
+        return this.http.get('/escrutinios/login/usuario', {headers: headers})
             .map((response: Response) => {
                 // login successful if there's a jwt token in the response
                 let user = response.json();
